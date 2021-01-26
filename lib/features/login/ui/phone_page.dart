@@ -36,7 +36,7 @@ class _PhonePageState extends State<PhonePage> {
           key: _key,
           child: TextFormField(
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(hintText: '+Ваш номер телефона'),
+            decoration: InputDecoration(hintText: '+ Ваш номер телефона'),
             inputFormatters: [_phoneController],
             validator: (value) {
               if (value.isEmpty) return "This input can not empty";
@@ -59,7 +59,6 @@ class _PhonePageState extends State<PhonePage> {
               print(_phoneController.getMaskedText());
               String phone = _phoneController.getUnmaskedText();
               print(phone);
-              print(phone[0]);
             },
             child: Text(
               'Войти',

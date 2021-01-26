@@ -2,7 +2,7 @@ import 'package:cto_task/features/application/ui/application_page.dart';
 import 'package:cto_task/features/login/ui/login_page.dart';
 import 'package:flutter/material.dart';
 
-import 'features/base/ui/base_page.dart';
+import 'features/auth/ui/base_page.dart';
 
 void main() {
   runApp(MyApp());
