@@ -1,5 +1,8 @@
-import 'package:cto_task/features/login/ui/phone_page.dart';
+import 'package:cto_task/features/login/bloc/login_bloc.dart';
+import 'package:cto_task/features/login/ui/widgets/phone_page.dart';
+import 'package:cto_task/features/login/ui/widgets/sms_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = 'login';
@@ -11,25 +14,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        foregroundColor: Colors.green,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: SafeArea(
-        minimum: EdgeInsets.all(16),
-        // child: Center(child: SmsPage()),
-        child: Center(child: PhonePage()),
-      ),
-    );
+    return BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
+      if (state is LoginFailure) {
+        print("loginFailur");
+      }
+    }, builder: (context, state) {
+      if (state is LoginSuccessPhone) {
+        return SmsPage();
+      }
+      return PhonePage();
+    });
   }
 }

@@ -11,6 +11,28 @@ class _SmsPageState extends State<SmsPage> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        foregroundColor: Colors.green,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.green,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: SafeArea(
+        minimum: EdgeInsets.all(16),
+        child: _bodyWidget(),
+      ),
+    );
+  }
+
+  Widget _bodyWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
