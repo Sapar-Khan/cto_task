@@ -2,8 +2,11 @@ import 'package:cto_task/features/login/ui/login_page.dart';
 import 'package:flutter/material.dart';
 
 class BasePage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if(!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
     return Scaffold(
       body: SafeArea(
         child: Container(

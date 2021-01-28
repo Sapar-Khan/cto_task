@@ -2,6 +2,7 @@ import 'package:cto_task/features/application/ui/application_page.dart';
 import 'package:cto_task/features/auth/bloc/auth_bloc.dart';
 import 'package:cto_task/features/login/bloc/login_bloc.dart';
 import 'package:cto_task/features/login/ui/login_page.dart';
+import 'package:cto_task/features/login/ui/widgets/sms_page.dart';
 import 'package:cto_task/util/widgets/loading_page.dart';
 import 'package:cto_task/util/widgets/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,10 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => loginBloc)
       ],
       child: MaterialApp(
-        routes: {LoginPage.routeName: (context) => LoginPage()},
+        routes: {
+          LoginPage.routeName: (context) => LoginPage(),
+          SmsPage.routeName: (context) => SmsPage(),
+        },
         theme: appTheme,
         home: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {

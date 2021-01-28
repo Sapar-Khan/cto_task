@@ -16,4 +16,13 @@ class UserRepository {
     if (jsonString != null) return User.parseJson(jsonString);
     return null;
   }
+
+
+  Future<void> saveUser(User user) async {
+    await _storage.write(key: _key, value: user.toString());
+  }
+
+  Future<void> removeUser()async {
+    await _storage.deleteAll();
+  }
 }

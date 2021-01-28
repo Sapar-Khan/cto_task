@@ -7,6 +7,8 @@ abstract class LoginEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class LoginToPhone extends LoginEvent{}
+
 class LoginSendPhone extends LoginEvent {
   final String phoneToServer;
   final String phoneToShow;

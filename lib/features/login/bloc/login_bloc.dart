@@ -31,6 +31,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LoginSendSmsCode) {
       yield* _mapLoginSendSmsCodeToState(event);
     }
+
+    if(event is LoginToPhone){
+      yield LoginInitial();
+    }
   }
 
   Stream<LoginState> _mapLoginSendPhoneToState(LoginSendPhone event) async* {
@@ -44,7 +48,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       else
         yield LoginFailurePhone(message: result);
     } catch (e) {
-      print('Error: ${e.message}');
+      
+      print('Error: $e');
       yield LoginFailure();
     }
   }
@@ -53,17 +58,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginSendSmsCode event) async* {
     yield LoginLoading();
     try {
-      User result =
+      Map result =
           await _repository.fetchLoginCheckSms(_phoneNumber, event.smsCode);
-
-      if (result != null) {
-        _authBloc.add(UserLoggedIn(user: result));
+      if (result['sts'] == 's') {
+        _authBloc.add(UserLoggedIn(userData: result['dat']));
         yield LoginSuccessSmsCode();
         yield LoginInitial();
       }
-      yield LoginFailureSmsCode(message: 'Error');
-    } catch (e) {
-      print('Error: ${e.message}');
+      else{
+        yield LoginFailureSmsCode(message: result['dat']);
+      }
+    }
+    catch (e) {
+      print('Error: $e');
       yield LoginFailure();
     }
   }

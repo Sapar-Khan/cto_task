@@ -21,16 +21,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield* _mapAppLoadedToState();
     }
     if (event is UserLoggedIn) {
-
+      yield* _mapUserLoggedInToState(event);
     }
 
     if (event is UserLoggedOut) {
-
+      yield AuthLoading();
+      await _repository.removeUser();
+      yield AuthNotAuthenticated();
     }
   }
 
   Stream<AuthState> _mapAppLoadedToState() async* {
-    yield AuthInitial();
+    yield AuthLoading();
     try {
       final bool isAuth = await _repository.isAuthenticated();
       print('isAuth: $isAuth');
@@ -43,6 +45,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       print('ERROR: ${e.message}');
       yield AuthFailure(message: e.message);
+    }
+  }
+
+  Stream<AuthState> _mapUserLoggedInToState(UserLoggedIn event) async* {
+    yield AuthLoading();
+    try{
+      User user = User.parseMap(event.userData);
+      await _repository.saveUser(user);
+      yield AuthSuccess(user: user);
+    }catch(_){
+      AuthFailure(message: 'Error');
     }
   }
 }
