@@ -40,4 +40,11 @@ class LoginFailureSmsCode extends LoginState {
   List<Object> get props => [message];
 }
 
-class LoginFailure extends LoginState{}
+class LoginFailure extends LoginState {
+  final String message;
+
+  LoginFailure({@required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

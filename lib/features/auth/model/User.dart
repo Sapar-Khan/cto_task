@@ -1,4 +1,4 @@
-import 'dart:convert' as convert;
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 
@@ -6,25 +6,17 @@ class User {
   final String username = 'Test';
   final String lastname = 'Test';
   final String token;
-  final int userId;
+  final int id;
 
-  User({@required this.token, @required this.userId});
+  User({@required this.token, @required this.id});
 
-  factory User.parseJson(String jsonString) {
-    Map object = convert.jsonDecode(jsonString);
-    return User(userId: object['id'], token: object['token']);
-  }
-
-  factory User.parseMap(Map object) {
-    return User(userId: object['id'], token: object['token']);
+  factory User.parseJson(Map<String, dynamic> object) {
+    return User(id: object['id'], token: object['token']);
   }
 
   @override
   String toString() {
-    Map object = {
-      'id': this.userId,
-      'token': this.token
-    };
-    return convert.jsonEncode(object);
+    Map object = {'id': this.id, 'token': this.token};
+    return json.encode(object);
   }
 }

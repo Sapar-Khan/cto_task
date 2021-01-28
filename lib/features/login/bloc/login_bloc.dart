@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cto_task/features/auth/bloc/auth_bloc.dart';
-import 'package:cto_task/features/auth/model/User.dart';
-import 'package:cto_task/features/login/resource/login_repository.dart';
+import 'package:cto_task/features/auth/resource/auth_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -17,7 +16,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _authBloc = authBloc,
         super(LoginInitial());
 
-  LoginRepository _repository = LoginRepository();
+  AuthRepository _repository = AuthRepository();
   String _phoneNumber;
 
   @override
@@ -32,7 +31,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _mapLoginSendSmsCodeToState(event);
     }
 
-    if(event is LoginToPhone){
+    if (event is LoginToPhone) {
       yield LoginInitial();
     }
   }
@@ -48,9 +47,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       else
         yield LoginFailurePhone(message: result);
     } catch (e) {
-      
-      print('Error: $e');
-      yield LoginFailure();
+      print('Error _mapLoginSendPhoneToState: $e');
+      yield LoginFailure(message: e);
     }
   }
 
@@ -58,20 +56,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginSendSmsCode event) async* {
     yield LoginLoading();
     try {
-      Map result =
+      String result =
           await _repository.fetchLoginCheckSms(_phoneNumber, event.smsCode);
-      if (result['sts'] == 's') {
-        _authBloc.add(UserLoggedIn(userData: result['dat']));
+      if (result == 's') {
+        print('sdfsdf');
+        _authBloc.add(UserLoggedIn());
         yield LoginSuccessSmsCode();
         yield LoginInitial();
+      } else {
+        yield LoginFailureSmsCode(message: result);
       }
-      else{
-        yield LoginFailureSmsCode(message: result['dat']);
-      }
-    }
-    catch (e) {
-      print('Error: $e');
-      yield LoginFailure();
+    } catch (e) {
+      print('Error _mapLoginSendSmsCodeToState: $e');
+      yield LoginFailure(message: e);
     }
   }
 }

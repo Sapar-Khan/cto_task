@@ -1,12 +1,11 @@
-import 'package:cto_task/features/login/ui/login_page.dart';
+import 'package:cto_task/features/login/ui/widgets/sms_page.dart';
 import 'package:flutter/material.dart';
 
 class BasePage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     FocusScopeNode currentFocus = FocusScope.of(context);
-    if(!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
+    if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -19,7 +18,7 @@ class BasePage extends StatelessWidget {
           )),
           child: Column(
             children: [
-              SizedBox(height: 280),
+              SizedBox(height: 240),
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -29,8 +28,7 @@ class BasePage extends StatelessWidget {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(60),
                           topRight: Radius.circular(60))),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: ListView(
                     children: [
                       SizedBox(height: 20),
                       Text(
@@ -105,30 +103,27 @@ class BasePage extends StatelessWidget {
                                   TextStyle(color: Colors.white, fontSize: 14)),
                         ),
                       ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            LoginButton(
-                              title: 'Я СТО или продаю запчасти',
-                              callback: () {},
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(vertical: 20),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0xFFdee3f0), width: 0.7)),
-                            ),
-                            LoginButton(
-                              title: 'Войти',
-                              callback: () {
-                                Navigator.pushNamed(
-                                    context, LoginPage.routeName);
-                              },
-                            ),
-                          ],
-                        ),
-                      )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          LoginButton(
+                            title: 'Я СТО или продаю запчасти',
+                            callback: () {},
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color(0xFFdee3f0), width: 0.7)),
+                          ),
+                          LoginButton(
+                            title: 'Войти',
+                            callback: () {
+                              Navigator.pushNamed(context, SmsPage.routeName);
+                            },
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

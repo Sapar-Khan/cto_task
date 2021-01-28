@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cto_task/features/auth/model/User.dart';
-import 'package:cto_task/features/resource/user_repository.dart';
+import 'package:cto_task/features/auth/resource/auth_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -11,7 +11,7 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial());
-  UserRepository _repository = UserRepository();
+  AuthRepository _repository = AuthRepository();
 
   @override
   Stream<AuthState> mapEventToState(
@@ -35,7 +35,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     yield AuthLoading();
     try {
       final bool isAuth = await _repository.isAuthenticated();
-      print('isAuth: $isAuth');
+
       if (isAuth) {
         final user = await _repository.getCurrentUser();
         yield AuthSuccess(user: user);
@@ -43,18 +43,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield AuthNotAuthenticated();
       }
     } catch (e) {
-      print('ERROR: ${e.message}');
+      print('ERROR ------ : ${e.message}');
       yield AuthFailure(message: e.message);
     }
   }
 
   Stream<AuthState> _mapUserLoggedInToState(UserLoggedIn event) async* {
     yield AuthLoading();
-    try{
-      User user = User.parseMap(event.userData);
-      await _repository.saveUser(user);
+    try {
+      User user = await _repository.getCurrentUser();
       yield AuthSuccess(user: user);
-    }catch(_){
+    } catch (_) {
       AuthFailure(message: 'Error');
     }
   }

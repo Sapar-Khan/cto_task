@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
         theme: appTheme,
         home: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
-            if (state is AuthInitial) {
+            if (state is AuthLoading) {
               return LoadingPage();
             }
             if (state is AuthSuccess) {

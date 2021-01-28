@@ -65,15 +65,15 @@ class _SmsPageState extends State<SmsPage> {
             key: _key,
             child: Container(
               width: 200,
-              
               child: TextFormField(
                 maxLength: 4,
-                onChanged: (value){
-                  try{
-                  if (value.length == 4){
-                    BlocProvider.of<LoginBloc>(context).add(LoginSendSmsCode(smsCode: int.parse(value)));
-                  }
-                  }catch(e){
+                onChanged: (value) {
+                  try {
+                    if (value.length == 4) {
+                      BlocProvider.of<LoginBloc>(context)
+                          .add(LoginSendSmsCode(smsCode: int.parse(value)));
+                    }
+                  } catch (e) {
                     print(e);
                   }
                 },

@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey _key = GlobalKey<FormState>();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
   MaskTextInputFormatter _phoneController;
 
   @override
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.green,
           ),
           onPressed: () {
-            
+            _closeKeyBoard();
             Navigator.pop(context);
           },
         ),
@@ -43,11 +43,17 @@ class _LoginPageState extends State<LoginPage> {
           child: BlocListener<LoginBloc, LoginState>(
               listener: (context, state) {
                 if (state is LoginFailurePhone) {
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text(state.message), backgroundColor: Colors.red));
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red));
                 }
                 if (state is LoginSuccessPhone) {
                   Navigator.pushNamed(context, SmsPage.routeName);
+                }
+                if (state is LoginFailure) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red));
                 }
               },
               child: _bodyWidget())),
@@ -75,7 +81,8 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(hintText: '+ Ваш номер телефона'),
             inputFormatters: [_phoneController],
             validator: (value) {
-              if (value.isEmpty) return "This input can not empty";
+              if (value.isEmpty) return 'Поле не может быть пустым';
+              if (value.length < 17) return 'Неверный формат';
               return null;
             },
           ),
@@ -91,14 +98,7 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.green,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            onPressed: () {
-              String showPhone = _phoneController.getMaskedText();
-              String phone = _phoneController.getUnmaskedText();
-              FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
-              BlocProvider.of<LoginBloc>(context).add(
-                  LoginSendPhone(phoneToServer: phone, phoneToShow: showPhone));
-            },
+            onPressed: _onPressLogin,
             child: Text(
               'Войти',
               style: TextStyle(fontSize: 20, color: Colors.white),
@@ -120,5 +120,21 @@ class _LoginPageState extends State<LoginPage> {
             ))
       ],
     );
+  }
+
+  void _onPressLogin() {
+    _closeKeyBoard();
+    if (_key.currentState.validate()) {
+      String showPhone = _phoneController.getMaskedText();
+      String phone = _phoneController.getUnmaskedText();
+
+      BlocProvider.of<LoginBloc>(context)
+          .add(LoginSendPhone(phoneToServer: phone, phoneToShow: showPhone));
+    }
+  }
+
+  void _closeKeyBoard() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
   }
 }
