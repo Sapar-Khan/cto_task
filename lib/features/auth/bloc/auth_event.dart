@@ -7,8 +7,21 @@ abstract class AuthEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AppLoaded extends AuthEvent {}
+class AuthAppLoaded extends AuthEvent {}
 
-class UserLoggedIn extends AuthEvent {}
+class AuthUserLogin extends AuthEvent {}
 
-class UserLoggedOut extends AuthEvent {}
+class AuthCheckPhone extends AuthEvent {
+  final phoneForServer;
+  final phoneForUser;
+
+  AuthCheckPhone({@required this.phoneForServer, @required this.phoneForUser});
+}
+
+class AuthCheckSms extends AuthEvent {
+  final int smsCode;
+
+  AuthCheckSms({@required this.smsCode});
+}
+
+class AuthBackToBase extends AuthEvent {}

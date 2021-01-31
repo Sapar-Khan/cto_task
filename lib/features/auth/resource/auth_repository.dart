@@ -16,40 +16,44 @@ class AuthRepository {
     return true;
   }
 
-  Future<String> fetchLoginWithPhone(String phone) async {
+  Future<String> fetchCheckPhoneNumber(String phone) async {
     try {
       Map<String, dynamic> object = {'phone': phone, 'err_ne': false};
-      Map<String, dynamic> result = await _provider.loginWithPhone(object);
-      print(result);
-      if (result.isEmpty) {
-        return 's';
-      }
-      // return error_msg[result['error_code']] ?? 'Произошла ошибка. Попробуйте позже';
-      return error_msg[result['error_code']] ?? result['error_code'];
+      dynamic result = await _provider.loginWithPhone(object);
+      print('result from loginWithPhone: $result');
+
+      if (result.runtimeType == String) return result;
+
+      return (result.isEmpty)
+          ? 's'
+          : (error_msg[result['error_code']] ?? result['error_code']);
     } catch (e) {
-      print('Error fetchLoginWithPhone: $e');
-      throw e;
+      print('fetchCheckPhoneNumber $e');
     }
   }
 
-  Future<String> fetchLoginCheckSms(String phone, int code) async {
-    Map object = {'phone': '77022966496', 'sms_code': code};
-    Map result = await _provider.loginCheckSms(object);
-    print(result);
-    if (result.containsKey('token')) {
-      await _storage.write(key: _key, value: json.encode(result));
-      return 's';
+  Future<String> fetchCheckSmsCode(String phone, int code) async {
+    try {
+      Map object = {'phone': phone, 'sms_code': code};
+      dynamic result = await _provider.loginCheckSms(object);
+
+      if (result.runtimeType == String) return result;
+      if (result.containsKey('token')) {
+        await _storage.write(key: _key, value: json.encode(result));
+        return 's';
+      }
+      return error_msg[result['error_code']] ?? result['error_code'];
+    } catch (e) {
+      print('fetchCheckSmsCode $e');
     }
-    return error_msg[result['error_code']] ?? result['error_code'];
   }
 
   Future<User> getCurrentUser() async {
-    try {
-      final jsonString = await _storage.read(key: _key);
-      if (jsonString != null) return User.parseJson(json.decode(jsonString));
-    } catch (e) {
-      print('getCurrentUser: $e');
-    }
+    // await _storage.deleteAll();
+    final jsonString = await _storage.read(key: _key);
+    print(jsonString);
+    if (jsonString != null) return User.parseJson(json.decode(jsonString));
+
     return null;
   }
 

@@ -1,8 +1,8 @@
+import 'package:cto_task/features/application/bloc/appl_bloc.dart';
 import 'package:cto_task/features/application/ui/application_page.dart';
 import 'package:cto_task/features/auth/bloc/auth_bloc.dart';
-import 'package:cto_task/features/login/bloc/login_bloc.dart';
-import 'package:cto_task/features/login/ui/login_page.dart';
-import 'package:cto_task/features/login/ui/widgets/sms_page.dart';
+import 'package:cto_task/features/auth/ui/login_page.dart';
+import 'package:cto_task/features/auth/ui/sms_page.dart';
 import 'package:cto_task/util/widgets/loading_page.dart';
 import 'package:cto_task/util/widgets/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -38,19 +38,19 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   AuthBloc authBloc;
-  LoginBloc loginBloc;
+  ApplBloc applBloc;
 
   @override
   void initState() {
-    authBloc = AuthBloc()..add(AppLoaded());
-    loginBloc = LoginBloc(authBloc);
+    authBloc = AuthBloc()..add(AuthAppLoaded());
+    applBloc = ApplBloc();
     super.initState();
   }
 
   @override
   void dispose() {
     authBloc.close();
-    loginBloc.close();
+    applBloc.close();
     super.dispose();
   }
 
@@ -59,24 +59,31 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => authBloc),
-        BlocProvider(create: (context) => loginBloc)
+        BlocProvider(create: (context) => applBloc)
       ],
       child: MaterialApp(
-        routes: {
-          LoginPage.routeName: (context) => LoginPage(),
-          SmsPage.routeName: (context) => SmsPage(),
-        },
         theme: appTheme,
-        home: BlocBuilder<AuthBloc, AuthState>(
+        home: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailureState) {
+              print(state.message);
+            }
+          },
           builder: (context, state) {
-            if (state is AuthLoading) {
+            if (state is AuthLoadingState) {
               return LoadingPage();
             }
-            if (state is AuthSuccess) {
-              return ApplicationPage();
-            }
-            if (state is AuthNotAuthenticated) {
+            if (state is AuthUserNotState) {
               return BasePage();
+            }
+            if (state is AuthUserLoginState) {
+              return LoginPage();
+            }
+            if (state is AuthUserPhoneSuccessState) {
+              return SmsPage(phoneNumber: state.phoneNumber);
+            }
+            if (state is AuthUserSuccessState) {
+              return ApplicationPage();
             }
             return SplashPage();
           },

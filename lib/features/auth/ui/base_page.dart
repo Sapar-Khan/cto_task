@@ -1,5 +1,6 @@
-import 'package:cto_task/features/login/ui/widgets/sms_page.dart';
+import 'package:cto_task/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BasePage extends StatelessWidget {
   @override
@@ -119,7 +120,8 @@ class BasePage extends StatelessWidget {
                           LoginButton(
                             title: 'Войти',
                             callback: () {
-                              Navigator.pushNamed(context, SmsPage.routeName);
+                              BlocProvider.of<AuthBloc>(context)
+                                  .add(AuthUserLogin());
                             },
                           ),
                         ],

@@ -12,49 +12,79 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial());
   AuthRepository _repository = AuthRepository();
+  String phoneForServer;
 
   @override
   Stream<AuthState> mapEventToState(
     AuthEvent event,
   ) async* {
-    if (event is AppLoaded) {
+    if (event is AuthAppLoaded) {
       yield* _mapAppLoadedToState();
     }
-    if (event is UserLoggedIn) {
-      yield* _mapUserLoggedInToState(event);
+    if (event is AuthCheckPhone) {
+      yield* _mapAuthCheckPhoneToState(event);
     }
-
-    if (event is UserLoggedOut) {
-      yield AuthLoading();
-      await _repository.removeUser();
-      yield AuthNotAuthenticated();
+    if (event is AuthCheckSms) {
+      yield* _mapAuthCheckSmsToState(event);
+    }
+    if (event is AuthUserLogin) {
+      yield AuthUserLoginState();
+    }
+    if (event is AuthBackToBase) {
+      yield AuthUserNotState();
     }
   }
 
   Stream<AuthState> _mapAppLoadedToState() async* {
-    yield AuthLoading();
+    yield AuthLoadingState();
     try {
       final bool isAuth = await _repository.isAuthenticated();
 
       if (isAuth) {
         final user = await _repository.getCurrentUser();
-        yield AuthSuccess(user: user);
-      } else {
-        yield AuthNotAuthenticated();
-      }
+        yield AuthUserSuccessState(user: user);
+      } else
+        yield AuthUserNotState();
     } catch (e) {
       print('ERROR ------ : ${e.message}');
-      yield AuthFailure(message: e.message);
+      yield AuthFailureState(message: e.message);
     }
   }
 
-  Stream<AuthState> _mapUserLoggedInToState(UserLoggedIn event) async* {
-    yield AuthLoading();
+  Stream<AuthState> _mapAuthCheckPhoneToState(AuthCheckPhone event) async* {
+    yield AuthLoadingState();
     try {
-      User user = await _repository.getCurrentUser();
-      yield AuthSuccess(user: user);
-    } catch (_) {
-      AuthFailure(message: 'Error');
+      String result =
+          await _repository.fetchCheckPhoneNumber(event.phoneForServer);
+      // String result = 's';
+      print('result: type: ${result.runtimeType} $result');
+      if (result == 's') {
+        phoneForServer = event.phoneForServer;
+        yield AuthUserPhoneSuccessState(phoneNumber: event.phoneForUser);
+      } else {
+        yield AuthFailureState(message: 'AuthCheckPhone Error $result');
+      }
+    } catch (e) {
+      print('_mapAuthCheckPhoneToState: $e');
+      yield AuthFailureState(message: "AuthCheckPhone error");
+    }
+  }
+
+  Stream<AuthState> _mapAuthCheckSmsToState(AuthCheckSms event) async* {
+    yield AuthLoadingState();
+    try {
+      String result =
+          await _repository.fetchCheckSmsCode(phoneForServer, event.smsCode);
+      // String result = 's';
+      if (result == 's') {
+        User user = await _repository.getCurrentUser();
+        yield AuthUserSuccessState(user: user);
+      } else {
+        yield AuthFailureState(message: result);
+      }
+    } catch (e) {
+      print('_mapAuthCheckSmsToState: $e');
+      yield AuthFailureState(message: 'AuthCheckSms error');
     }
   }
 }
