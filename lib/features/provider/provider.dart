@@ -16,11 +16,10 @@ class ApiProvider {
       throw err_msg;
     }
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200)
       return (response.body is String && response.body.length == 0)
           ? {}
           : json.decode(response.body);
-    }
 
     throw err_msg;
   }
@@ -64,7 +63,7 @@ class ApiProvider {
     http.Response response;
 
     try {
-      final String url = '$baseApiUrl/api/dic?hs=$hs';
+      final String url = '$baseApiUrl/dic?hs=$hs';
       response = await http.get(url);
     } catch (e) {
       print('Error loginCheckSms: $e');
@@ -87,7 +86,7 @@ class ApiProvider {
 
     try {
       response = await http.get(
-          'https://ctogram.kz/api/ads?page=$page&page_size=$pageSize&kind=$kind',
+          '$baseApiUrl/ads?page=$page&page_size=$pageSize&kind=$kind',
           headers: {'Authorization': '$token'});
     } catch (e) {
       print('Error getApplItems: $e');

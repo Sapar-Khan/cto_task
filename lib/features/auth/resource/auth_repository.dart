@@ -26,7 +26,7 @@ class AuthRepository {
   Future<String> fetchCheckPhoneNumber(String phone) async {
     try {
       Map<String, dynamic> object = {'phone': phone, 'err_ne': false};
-      Map<String, dynamic> result = await _provider.loginWithPhone(object);
+      Map result = await _provider.loginWithPhone(object);
 
       return (result.isEmpty)
           ? 's'
