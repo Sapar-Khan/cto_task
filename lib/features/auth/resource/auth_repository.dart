@@ -51,7 +51,6 @@ class AuthRepository {
   Future<User> getCurrentUser() async {
     // await _storage.deleteAll();
     final jsonString = await _storage.read(key: _key);
-    print(jsonString);
     if (jsonString != null) return User.parseJson(json.decode(jsonString));
 
     return null;

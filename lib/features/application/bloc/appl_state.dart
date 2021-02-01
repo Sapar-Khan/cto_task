@@ -12,9 +12,11 @@ class ApplInitial extends ApplState {}
 class ApplLoading extends ApplState {}
 
 class ApplSuccess extends ApplState {
-  final List<Appl> items;
+  final Appl appl;
 
-  ApplSuccess({@required this.items});
+  ApplSuccess({@required this.appl});
+
+  List<Object> get props => [appl];
 }
 
 class ApplError extends ApplState {

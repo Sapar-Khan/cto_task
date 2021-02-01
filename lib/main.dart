@@ -3,6 +3,7 @@ import 'package:cto_task/features/application/ui/application_page.dart';
 import 'package:cto_task/features/auth/bloc/auth_bloc.dart';
 import 'package:cto_task/features/auth/ui/login_page.dart';
 import 'package:cto_task/features/auth/ui/sms_page.dart';
+import 'package:cto_task/features/home/ui/home_page.dart';
 import 'package:cto_task/util/widgets/loading_page.dart';
 import 'package:cto_task/util/widgets/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +84,7 @@ class _MyAppState extends State<MyApp> {
               return SmsPage(phoneNumber: state.phoneNumber);
             }
             if (state is AuthUserSuccessState) {
-              return ApplicationPage();
+              return HomePage();
             }
             return SplashPage();
           },

@@ -1,12 +1,18 @@
+import 'package:cto_task/features/application/model/appl_item.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class CardItem extends StatelessWidget {
-  const CardItem({
-    Key key,
-  }) : super(key: key);
+  final Results results;
+  final DateTime dateTime = new DateTime.now();
+
+  CardItem({Key key, @required this.results})
+      : assert(results != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    timeago.setLocaleMessages('ru', timeago.RuMessages());
     return new GestureDetector(
       onTap: () {
         print("GestureDetector");
@@ -35,7 +41,7 @@ class CardItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Subasu OutBack(2007г)",
+                      results.usrName,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -45,7 +51,7 @@ class CardItem extends StatelessWidget {
                     ),
                     Container(
                       child: Text(
-                        "Замена сальника распредвала",
+                        results.note,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(fontSize: 18),
@@ -57,16 +63,24 @@ class CardItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          width: 120,
-                          child: Text('Кокшетау',
+                        Expanded(
+                          child: Text(results.c_name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style:
                                   TextStyle(fontSize: 13, color: Colors.grey)),
                         ),
-                        Text('3 минуты назад',
-                            style: TextStyle(fontSize: 13, color: Colors.grey))
+                        Expanded(
+                          child: Text(
+                              timeago.format(
+                                  dateTime.subtract(dateTime.difference(
+                                      DateTime.parse(results.publishedAt))),
+                                  locale: 'ru'),
+                              textAlign: TextAlign.end,
+                              maxLines: 1,
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.grey)),
+                        )
                       ],
                     )
                   ],

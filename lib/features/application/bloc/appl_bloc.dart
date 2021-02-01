@@ -18,9 +18,15 @@ class ApplBloc extends Bloc<ApplEvent, ApplState> {
     ApplEvent event,
   ) async* {
     if (event is ApplLoadItem) {
-      yield ApplLoading();
-      await _reposytory.fetchApplItems();
-      yield ApplError(error: 'error');
+      print('event is ApplLoadItem');
+      // yield ApplLoading();
+      await _reposytory.fetchDict();
+      Appl result = await _reposytory.fetchApplItems();
+      if(result != null){
+          yield ApplSuccess(appl: result);
+      }else{
+         yield ApplError(error: 'error');
+      }
     }
   }
 }

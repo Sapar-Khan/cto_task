@@ -25,3 +25,5 @@ class AuthCheckSms extends AuthEvent {
 }
 
 class AuthBackToBase extends AuthEvent {}
+
+class AuthUserLogout extends AuthEvent {}

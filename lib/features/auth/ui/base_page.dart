@@ -5,8 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
+    double screenHeight = MediaQuery.of(context).size.height;
+    print(screenHeight);
+    
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -19,7 +20,7 @@ class BasePage extends StatelessWidget {
           )),
           child: Column(
             children: [
-              SizedBox(height: 240),
+              SizedBox(height: (screenHeight / 2) - 120),
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -29,104 +30,109 @@ class BasePage extends StatelessWidget {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(60),
                           topRight: Radius.circular(60))),
-                  child: ListView(
-                    children: [
-                      SizedBox(height: 20),
-                      Text(
-                        'Найди СТО или запчасть за 3 минуты',
-                        style: TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.w700),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      BaseButtons(
-                        icon: Icon(
-                          Icons.home,
-                          size: 50,
-                          color: Colors.white,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20),
+                        Text(
+                          'Найди СТО или запчасть за 3 минуты',
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w700),
+                          textAlign: TextAlign.center,
                         ),
-                        title: 'Отправить заявку',
-                        subtitle: 'Получить цены от свободных',
-                        callback: () {},
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      BaseButtons(
-                        icon: Icon(
-                          Icons.linked_camera_rounded,
-                          size: 50,
-                          color: Colors.white,
+                        SizedBox(
+                          height: 20,
                         ),
-                        title: 'Штрафы ПДД',
-                        subtitle: 'Проверка и оплата',
-                        callback: () {},
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RaisedButton(
-                        color: Color(0xFFa6b1d3),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        onPressed: () {},
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.verified_user,
+                        BaseButtons(
+                          icon: Icon(
+                            Icons.home,
                             size: 50,
                             color: Colors.white,
                           ),
-                          title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Страховка',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold)),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 8),
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFFe65459),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Text(
-                                    '10% скидка',
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.white),
-                                  ),
-                                )
-                              ]),
-                          subtitle: Text('Расчет и оплата',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14)),
+                          title: 'Отправить заявку',
+                          subtitle: 'Получить цены от свободных',
+                          callback: () {},
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          LoginButton(
-                            title: 'Я СТО или продаю запчасти',
-                            callback: () {},
+                        SizedBox(
+                          height: 10,
+                        ),
+                        BaseButtons(
+                          icon: Icon(
+                            Icons.linked_camera_rounded,
+                            size: 50,
+                            color: Colors.white,
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Color(0xFFdee3f0), width: 0.7)),
+                          title: 'Штрафы ПДД',
+                          subtitle: 'Проверка и оплата',
+                          callback: () {},
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        RaisedButton(
+                          color: Color(0xFFa6b1d3),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          onPressed: () {},
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.verified_user,
+                              size: 50,
+                              color: Colors.white,
+                            ),
+                            title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Страховка',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold)),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 8),
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFe65459),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Text(
+                                      '10% скидка',
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.white),
+                                    ),
+                                  )
+                                ]),
+                            subtitle: Text('Расчет и оплата',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14)),
                           ),
-                          LoginButton(
-                            title: 'Войти',
-                            callback: () {
-                              BlocProvider.of<AuthBloc>(context)
-                                  .add(AuthUserLogin());
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            LoginButton(
+                              title: 'Я СТО или продаю запчасти',
+                              callback: () {},
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Color(0xFFdee3f0), width: 0.7)),
+                            ),
+                            LoginButton(
+                              title: 'Войти',
+                              callback: () {
+                                BlocProvider.of<AuthBloc>(context)
+                                    .add(AuthUserLogin());
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )

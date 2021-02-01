@@ -213,6 +213,15 @@ class Data {
         json['config'] != null ? new Config.fromJson(json['config']) : null;
   }
 
+  Map<int, String> getCityes(){
+    Map<int, String> c = new Map<int, String>();
+    List<Cities> cl = this._cities;
+    for(int i = 0, l = cl.length; i < l; i++){
+      c[cl[i].id] = cl[i].name;
+    }
+    return c;
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this._platforms != null) {

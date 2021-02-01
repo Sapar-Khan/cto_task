@@ -33,6 +33,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is AuthBackToBase) {
       yield AuthUserNotState();
     }
+    if(event is AuthUserLogout){
+      await _repository.removeUser();
+      yield AuthUserNotState();
+    }
   }
 
   Stream<AuthState> _mapAppLoadedToState() async* {

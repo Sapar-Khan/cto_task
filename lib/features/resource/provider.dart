@@ -18,12 +18,11 @@ class ApiProvider {
     }
 
     if (response.statusCode == 200) {
-      return (response.body.runtimeType == String && response.body.length > 0)
+      return (response.body is String && response.body.length == 0)
           ? {}
           : json.decode(response.body);
-    } else {
-      print('response status: ${response.statusCode}');
     }
+    print('response status: ${response.statusCode}');
 
     return 'Произошла ошибка. Попробуйте позже';
   }
@@ -49,16 +48,15 @@ class ApiProvider {
   Future<dynamic> getDictionary() async {
     print('getDictionary');
     http.Response response;
-    Map dict;
 
     try {
-      final String url = '$baseApiUrl/api/dic';
+      final String url = '$baseApiUrl/dic';
       response = await http.get(url);
     } catch (e) {
       print('Error loginCheckSms: $e');
       return 'Произошла ошибка. Попробуйте позже';
     }
-
+    print(response.statusCode);
     if (response.statusCode == 200) return json.decode(response.body);
 
     return 'Произошла ошибка. Попробуйте позже';
@@ -92,8 +90,6 @@ class ApiProvider {
     http.Response response;
 
     try {
-      print("$token $page $pageSize, $kind, $cityId");
-      // response = await http.get('https://www.google.com');
       response = await http.get(
           'https://ctogram.kz/api/ads?page=$page&page_size=$pageSize&kind=$kind',
           headers: {'Authorization': '$token'});

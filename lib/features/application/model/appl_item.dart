@@ -20,13 +20,14 @@ class Appl {
   List<Results> get results => _results;
   set results(List<Results> results) => _results = results;
 
-  Appl.fromJson(Map<String, dynamic> json) {
+  Appl.fromJson(Map<String, dynamic> json, Map<int, String> city) {
     _page = json['page'];
     _pageSize = json['page_size'];
     _totalCount = json['total_count'];
     if (json['results'] != null) {
       _results = new List<Results>();
       json['results'].forEach((v) {
+        v['c_name'] = city[v['city_id']];
         _results.add(new Results.fromJson(v));
       });
     }
@@ -69,7 +70,7 @@ class Results {
   String _note;
   Map<String, dynamic> _flexValues;
   int _visits;
-  double _rate;
+  num _rate;
   int _ratersCount;
   int _popularity;
   String _pafTime;
@@ -79,6 +80,7 @@ class Results {
   int _closedAmount;
   String _closeNotifyAt;
   bool _isDealer;
+  String _c_name;
 
   Results(
       {int id,
@@ -105,7 +107,7 @@ class Results {
       String note,
       Map flexValues,
       int visits,
-      double rate,
+      num rate,
       int ratersCount,
       int popularity,
       String pafTime,
@@ -114,7 +116,8 @@ class Results {
       int closedReasonId,
       int closedAmount,
       String closeNotifyAt,
-      bool isDealer}) {
+      bool isDealer,
+      String c_name}) {
     this._id = id;
     this._createdAt = createdAt;
     this._publishedAt = publishedAt;
@@ -149,6 +152,7 @@ class Results {
     this._closedAmount = closedAmount;
     this._closeNotifyAt = closeNotifyAt;
     this._isDealer = isDealer;
+    this._c_name = c_name;
   }
 
   int get id => _id;
@@ -200,8 +204,8 @@ class Results {
   set flexValues(Map flexValues) => _flexValues = flexValues;
   int get visits => _visits;
   set visits(int visits) => _visits = visits;
-  double get rate => _rate;
-  set rate(double rate) => _rate = rate;
+  num get rate => _rate;
+  set rate(num rate) => _rate = rate;
   int get ratersCount => _ratersCount;
   set ratersCount(int ratersCount) => _ratersCount = ratersCount;
   int get popularity => _popularity;
@@ -220,6 +224,8 @@ class Results {
   set closeNotifyAt(String closeNotifyAt) => _closeNotifyAt = closeNotifyAt;
   bool get isDealer => _isDealer;
   set isDealer(bool isDealer) => _isDealer = isDealer;
+  String get c_name => _c_name;
+  set c_name(String c_name) => _c_name = c_name;
 
   Results.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -256,6 +262,7 @@ class Results {
     _closedAmount = json['closed_amount'];
     _closeNotifyAt = json['close_notify_at'];
     _isDealer = json['is_dealer'];
+    _c_name = json['c_name'];
   }
 
   Map<String, dynamic> toJson() {

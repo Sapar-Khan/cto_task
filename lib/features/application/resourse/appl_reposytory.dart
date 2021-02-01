@@ -10,15 +10,19 @@ class ApplReposytory {
   Appl appl;
   Dict dict;
   int page = 1;
-  int pageSize = 1;
-  int kind = 1;
+  int pageSize = 30;
+  int kind = 2;
   int cityId = 34;
+  Map<int, String> test = new Map<int, String>();
 
   Future<void> fetchDict() async {
     dynamic result = await _apiProvider.getDictionary();
-    if (result.runtimeType != String) {
-      dict = Dict.fromJson(result);
+    if (result.runtimeType is String) {
+      return;
     }
+    // print("test: $result");
+
+    dict = Dict.fromJson(result);
   }
 
   Future<void> fetchCurrentDict() async {
@@ -32,6 +36,7 @@ class ApplReposytory {
 
   Future<dynamic> fetchApplItems() async {
     try {
+      print('page: $page');
       String jsonString = await _storage.read(key: 'auth_user');
       Map jsonData = json.decode(jsonString);
       String token = jsonData['token'];
@@ -42,9 +47,9 @@ class ApplReposytory {
           cityId: cityId,
           token: token);
       // print(result);
-      appl = Appl.fromJson(result);
-      print(appl.results[0]);
-      return null;
+      appl = Appl.fromJson(result, dict.data.getCityes());
+      page++;
+      return appl;
     } catch (e) {
       print('Error fetchApplItems: $e');
       return 'Произошла ошибка. Попробуйте позже';
