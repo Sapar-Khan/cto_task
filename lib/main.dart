@@ -6,6 +6,7 @@ import 'package:cto_task/features/auth/ui/sms_page.dart';
 import 'package:cto_task/features/home/ui/home_page.dart';
 import 'package:cto_task/util/widgets/loading_page.dart';
 import 'package:cto_task/util/widgets/splash_page.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -67,7 +68,16 @@ class _MyAppState extends State<MyApp> {
         home: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthFailureState) {
-              print(state.message);
+              Flushbar(
+                title: 'Ошибка',
+                message: state.message,
+                flushbarPosition: FlushbarPosition.TOP,
+                duration: Duration(seconds: 3),
+                isDismissible: false,
+                backgroundColor: Colors.red[900],
+                borderRadius: 8,
+                margin: EdgeInsets.all(16.0),
+              )..show(context);
             }
           },
           builder: (context, state) {

@@ -1,4 +1,6 @@
 import 'package:cto_task/features/auth/bloc/auth_bloc.dart';
+import 'package:cto_task/features/auth/ui/widgets/base_button.dart';
+import 'package:cto_task/features/auth/ui/widgets/login_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,8 +8,7 @@ class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    print(screenHeight);
-    
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -74,63 +75,10 @@ class BasePage extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
                           onPressed: () {},
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.verified_user,
-                              size: 50,
-                              color: Colors.white,
-                            ),
-                            title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Страховка',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold)),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 8),
-                                    decoration: BoxDecoration(
-                                        color: Color(0xFFe65459),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Text(
-                                      '10% скидка',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.white),
-                                    ),
-                                  )
-                                ]),
-                            subtitle: Text('Расчет и оплата',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14)),
-                          ),
+                          child: _buttonWithSale(),
                         ),
                         SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            LoginButton(
-                              title: 'Я СТО или продаю запчасти',
-                              callback: () {},
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0xFFdee3f0), width: 0.7)),
-                            ),
-                            LoginButton(
-                              title: 'Войти',
-                              callback: () {
-                                BlocProvider.of<AuthBloc>(context)
-                                    .add(AuthUserLogin());
-                              },
-                            ),
-                          ],
-                        ),
+                        _loginButtons(context)
                       ],
                     ),
                   ),
@@ -142,60 +90,56 @@ class BasePage extends StatelessWidget {
       ),
     );
   }
-}
 
-class LoginButton extends StatelessWidget {
-  final String title;
-  final Function callback;
-
-  const LoginButton({Key key, @required this.title, @required this.callback})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: TextButton(
-          onPressed: callback,
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 16, color: Colors.green),
-            textAlign: TextAlign.center,
-          )),
+  Widget _loginButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        LoginButton(
+          title: 'Я СТО или продаю запчасти',
+          callback: () {},
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          decoration: BoxDecoration(
+              border: Border.all(color: Color(0xFFdee3f0), width: 0.7)),
+        ),
+        LoginButton(
+          title: 'Войти',
+          callback: () {
+            BlocProvider.of<AuthBloc>(context).add(AuthUserLogin());
+          },
+        ),
+      ],
     );
   }
-}
 
-class BaseButtons extends StatelessWidget {
-  final Icon icon;
-  final String title;
-  final String subtitle;
-  final Function callback;
-
-  const BaseButtons(
-      {Key key,
-      @required this.icon,
-      @required this.title,
-      @required this.subtitle,
-      @required this.callback})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      color: Color(0xFF48ca64),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      onPressed: callback,
-      child: ListTile(
-        leading: icon,
-        title: Text(
-          title,
-          style: TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        subtitle:
-            Text(subtitle, style: TextStyle(color: Colors.white, fontSize: 14)),
+  Widget _buttonWithSale() {
+    return ListTile(
+      leading: Icon(
+        Icons.verified_user,
+        size: 50,
+        color: Colors.white,
       ),
+      title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text('Страховка',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold)),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+          decoration: BoxDecoration(
+              color: Color(0xFFe65459),
+              borderRadius: BorderRadius.circular(10)),
+          child: Text(
+            '10% скидка',
+            style: TextStyle(fontSize: 15, color: Colors.white),
+          ),
+        )
+      ]),
+      subtitle: Text('Расчет и оплата',
+          style: TextStyle(color: Colors.white, fontSize: 14)),
     );
   }
 }

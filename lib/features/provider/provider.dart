@@ -4,8 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiProvider {
-  Map<String, dynamic> header = {"Content-Type": "application/json"};
-  Future<dynamic> loginWithPhone(Map<String, dynamic> object) async {
+  Future<Map> loginWithPhone(Map<String, dynamic> object) async {
     print('LoginWithPhone');
     http.Response response;
     try {
@@ -14,7 +13,7 @@ class ApiProvider {
       response = await http.post(url, body: payload);
     } catch (e) {
       print('Error loginWithPhone: $e');
-      return 'Произошла ошибка. Попробуйте позже';
+      throw err_msg;
     }
 
     if (response.statusCode == 200) {
@@ -22,12 +21,11 @@ class ApiProvider {
           ? {}
           : json.decode(response.body);
     }
-    print('response status: ${response.statusCode}');
 
-    return 'Произошла ошибка. Попробуйте позже';
+    throw err_msg;
   }
 
-  Future<dynamic> loginCheckSms(Map object) async {
+  Future<Map> loginCheckSms(Map object) async {
     print('LoginCheckSms');
     http.Response response;
 
@@ -37,12 +35,12 @@ class ApiProvider {
       response = await http.post(url, body: payload);
     } catch (e) {
       print('Error loginCheckSms: $e');
-      return 'Произошла ошибка. Попробуйте позже';
+      throw err_msg;
     }
 
     if (response.statusCode == 200) return json.decode(response.body);
 
-    return 'Произошла ошибка. Попробуйте позже';
+    throw err_msg;
   }
 
   Future<dynamic> getDictionary() async {
@@ -54,30 +52,28 @@ class ApiProvider {
       response = await http.get(url);
     } catch (e) {
       print('Error loginCheckSms: $e');
-      return 'Произошла ошибка. Попробуйте позже';
+      throw err_msg;
     }
-    print(response.statusCode);
     if (response.statusCode == 200) return json.decode(response.body);
 
-    return 'Произошла ошибка. Попробуйте позже';
+    throw err_msg;
   }
 
   Future<dynamic> getCurrentDictionary(String hs) async {
     print('getDictionary');
     http.Response response;
-    Map dict;
 
     try {
       final String url = '$baseApiUrl/api/dic?hs=$hs';
       response = await http.get(url);
     } catch (e) {
       print('Error loginCheckSms: $e');
-      return 'Произошла ошибка. Попробуйте позже';
+      throw err_msg;
     }
 
     if (response.statusCode == 200) return response.body;
 
-    return 'Произошла ошибка. Попробуйте позже';
+    throw err_msg;
   }
 
   Future<Map> getApplItems(
@@ -95,16 +91,11 @@ class ApiProvider {
           headers: {'Authorization': '$token'});
     } catch (e) {
       print('Error getApplItems: $e');
-      throw 'Произошла ошибка. Попробуйте позже';
+      throw err_msg;
     }
 
-    if (response.statusCode == 200) {
-      print("sts 200");
-      return json.decode(response.body);
-    } else {
-      print('sts: ${response.statusCode}');
-    }
+    if (response.statusCode == 200) return json.decode(response.body);
 
-    throw 'Произошла ошибка. Попробуйте позже';
+    throw err_msg;
   }
 }

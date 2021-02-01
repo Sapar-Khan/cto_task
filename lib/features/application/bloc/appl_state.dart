@@ -20,7 +20,7 @@ class ApplSuccess extends ApplState {
 }
 
 class ApplError extends ApplState {
-  final String error;
+  final String message;
 
-  ApplError({@required this.error});
+  ApplError({@required this.message});
 }

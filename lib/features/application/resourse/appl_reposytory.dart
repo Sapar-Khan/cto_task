@@ -1,6 +1,6 @@
 import 'package:cto_task/features/application/model/appl_item.dart';
 import 'package:cto_task/features/application/model/dict_model.dart';
-import 'package:cto_task/features/resource/provider.dart';
+import 'package:cto_task/features/provider/provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
@@ -16,27 +16,24 @@ class ApplReposytory {
   Map<int, String> test = new Map<int, String>();
 
   Future<void> fetchDict() async {
-    dynamic result = await _apiProvider.getDictionary();
-    if (result.runtimeType is String) {
-      return;
+    try {
+      dynamic result = await _apiProvider.getDictionary();
+      dict = Dict.fromJson(result);
+    } catch (e) {
+      print('fetchDict Error: $e');
     }
-    // print("test: $result");
-
-    dict = Dict.fromJson(result);
   }
 
   Future<void> fetchCurrentDict() async {
     dynamic result = await _apiProvider.getCurrentDictionary(dict.hs);
-    if (result.runtimeType != String && result['data'] == null) {
+    if (result.runtimeType != String && result['data'] == null)
       print(result);
-    } else {
+    else
       print(result);
-    }
   }
 
   Future<dynamic> fetchApplItems() async {
     try {
-      print('page: $page');
       String jsonString = await _storage.read(key: 'auth_user');
       Map jsonData = json.decode(jsonString);
       String token = jsonData['token'];
@@ -46,12 +43,11 @@ class ApplReposytory {
           kind: kind,
           cityId: cityId,
           token: token);
-      // print(result);
       appl = Appl.fromJson(result, dict.data.getCityes());
       page++;
       return appl;
     } catch (e) {
-      print('Error fetchApplItems: $e');
+      print('fetchApplItems Error: $e');
       return 'Произошла ошибка. Попробуйте позже';
     }
   }

@@ -23,14 +23,15 @@ class _HomePageState extends State<HomePage> {
           ApplicationPage(),
           Center(
               child: Container(
-                width: 250,
-                height: 40,
-            child: RaisedButton(onPressed: () {
-              BlocProvider.of<AuthBloc>(context).add(AuthUserLogout());
-            },
-            child: Text('Выйти'),
-            textColor: Colors.white,
-            color: Colors.redAccent),
+            width: 250,
+            height: 40,
+            child: RaisedButton(
+                onPressed: () {
+                  BlocProvider.of<AuthBloc>(context).add(AuthUserLogout());
+                },
+                child: Text('Выйти'),
+                textColor: Colors.white,
+                color: Colors.redAccent),
           ))
         ],
       ),
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.app_blocking),
-            label: 'Мои заявки',
+            label: 'Заявки',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_pin),

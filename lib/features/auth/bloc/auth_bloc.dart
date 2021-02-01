@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cto_task/features/auth/model/User.dart';
 import 'package:cto_task/features/auth/resource/auth_repository.dart';
+import 'package:cto_task/util/conf.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -33,7 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is AuthBackToBase) {
       yield AuthUserNotState();
     }
-    if(event is AuthUserLogout){
+    if (event is AuthUserLogout) {
       await _repository.removeUser();
       yield AuthUserNotState();
     }
@@ -45,13 +46,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final bool isAuth = await _repository.isAuthenticated();
 
       if (isAuth) {
-        final user = await _repository.getCurrentUser();
+        Map result = await _repository.getCurrentUser();
+        User user = User.parseJson(result);
         yield AuthUserSuccessState(user: user);
       } else
         yield AuthUserNotState();
     } catch (e) {
-      print('ERROR ------ : ${e.message}');
-      yield AuthFailureState(message: e.message);
+      print('_mapAppLoadedToState ERROR: $e');
+      yield AuthFailureState(message: err_msg);
     }
   }
 
@@ -60,17 +62,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       String result =
           await _repository.fetchCheckPhoneNumber(event.phoneForServer);
-      // String result = 's';
-      print('result: type: ${result.runtimeType} $result');
       if (result == 's') {
         phoneForServer = event.phoneForServer;
         yield AuthUserPhoneSuccessState(phoneNumber: event.phoneForUser);
-      } else {
+      } else
         yield AuthFailureState(message: 'AuthCheckPhone Error $result');
-      }
     } catch (e) {
-      print('_mapAuthCheckPhoneToState: $e');
-      yield AuthFailureState(message: "AuthCheckPhone error");
+      print('_mapAuthCheckPhoneToState ERROR: $e');
+      yield AuthFailureState(message: err_msg);
     }
   }
 
@@ -79,16 +78,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       String result =
           await _repository.fetchCheckSmsCode(phoneForServer, event.smsCode);
-      // String result = 's';
       if (result == 's') {
-        User user = await _repository.getCurrentUser();
+        Map result = await _repository.getCurrentUser();
+        User user = User.parseJson(result);
         yield AuthUserSuccessState(user: user);
-      } else {
+      } else
         yield AuthFailureState(message: result);
-      }
     } catch (e) {
       print('_mapAuthCheckSmsToState: $e');
-      yield AuthFailureState(message: 'AuthCheckSms error');
+      yield AuthFailureState(message: err_msg);
     }
   }
 }

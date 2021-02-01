@@ -105,16 +105,12 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onPressLogin() {
     _closeKeyBoard();
+
     if (_key.currentState.validate()) {
       String phoneForUser = _phoneController.getMaskedText();
       String phoneForServer = _phoneController.getUnmaskedText();
-      print('$phoneForUser $phoneForServer');
-      print(phoneForUser.runtimeType);
       BlocProvider.of<AuthBloc>(context).add(AuthCheckPhone(
           phoneForServer: phoneForServer, phoneForUser: phoneForUser));
-
-      // BlocProvider.of<LoginBloc>(context)
-      //     .add(LoginSendPhone(phoneToServer: phone, phoneToShow: showPhone));
     }
   }
 

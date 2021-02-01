@@ -1,5 +1,7 @@
 const String baseApiUrl = 'https://ctogram.kz/api';
 
+const String err_msg = 'Произошла ошибка. Попробуйте позже';
+
 const Map error_msg = {
   'sms_send_fail': 'Не удалось отправить СМС',
   'bad_phone_format': 'Неверный формат номера',
