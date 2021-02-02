@@ -79,7 +79,6 @@ class ApiProvider {
       {@required int page,
       @required int pageSize,
       @required int kind,
-      @required int cityId,
       @required String token}) async {
     print('getApplItems');
     http.Response response;

@@ -1,4 +1,3 @@
-import 'package:cto_task/db/database.dart';
 import 'package:cto_task/features/application/model/appl_item.dart';
 import 'package:cto_task/features/application/model/dict_model.dart';
 import 'package:cto_task/features/provider/provider.dart';
@@ -8,7 +7,6 @@ import 'dart:convert';
 class ApplReposytory {
   ApiProvider _apiProvider = ApiProvider();
   FlutterSecureStorage _storage = FlutterSecureStorage();
-  DBProvider _database = DBProvider.db;
   Appl appl;
   Dict dict;
   int page = 1;
@@ -20,22 +18,31 @@ class ApplReposytory {
 
   Future<void> fetchDict() async {
     try {
-      // await _storage.delete(key: 'hs');
       String hs = await _storage.read(key: 'hs');
       Map<String, dynamic> data;
 
-      if (hs == null)
+      if (hs == null) {
         data = await _apiProvider.getDictionary();
-      else
-        data = await _apiProvider.getCurrentDictionary(hs);
-
-      if (data['data'] != null) {
-        await _storage.write(key: 'dict', value: json.encode(data));
         await _storage.write(key: 'hs', value: data['hs']);
+        await _storage.write(key: 'dict', value: json.encode(data));
       } else
         data = json.decode(await _storage.read(key: 'dict'));
 
       dict = Dict.fromJson(data);
+
+      // if (hs == null)
+      //   data = await _apiProvider.getDictionary();
+      // else
+      //   data = await _apiProvider.getCurrentDictionary(hs);
+
+      // if (data['data'] != null) {
+      //   await _storage.write(key: 'dict', value: json.encode(data));
+      //   await _storage.write(key: 'hs', value: data['hs']);
+      // } else
+      //   data = json.decode(await _storage.read(key: 'dict'));
+
+      // dict = Dict.fromJson(data);
+
     } catch (e) {
       print('fetchDict Error: $e');
     }
@@ -55,11 +62,7 @@ class ApplReposytory {
       Map jsonData = json.decode(jsonString);
       String token = jsonData['token'];
       Map result = await _apiProvider.getApplItems(
-          page: page,
-          pageSize: pageSize,
-          kind: kind,
-          cityId: cityId,
-          token: token);
+          page: page, pageSize: pageSize, kind: kind, token: token);
 
       appl = Appl.fromJson(result, dict);
       page++;
