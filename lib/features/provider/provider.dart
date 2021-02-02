@@ -42,7 +42,7 @@ class ApiProvider {
     throw err_msg;
   }
 
-  Future<dynamic> getDictionary() async {
+  Future<Map<String, dynamic>> getDictionary() async {
     print('getDictionary');
     http.Response response;
 
@@ -58,7 +58,7 @@ class ApiProvider {
     throw err_msg;
   }
 
-  Future<dynamic> getCurrentDictionary(String hs) async {
+  Future<Map<String, dynamic>> getCurrentDictionary(String hs) async {
     print('getDictionary');
     http.Response response;
 
@@ -70,7 +70,7 @@ class ApiProvider {
       throw err_msg;
     }
 
-    if (response.statusCode == 200) return response.body;
+    if (response.statusCode == 200) return json.decode(response.body);
 
     throw err_msg;
   }

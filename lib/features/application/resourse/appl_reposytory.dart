@@ -1,3 +1,4 @@
+import 'package:cto_task/db/database.dart';
 import 'package:cto_task/features/application/model/appl_item.dart';
 import 'package:cto_task/features/application/model/dict_model.dart';
 import 'package:cto_task/features/provider/provider.dart';
@@ -7,8 +8,8 @@ import 'dart:convert';
 class ApplReposytory {
   ApiProvider _apiProvider = ApiProvider();
   FlutterSecureStorage _storage = FlutterSecureStorage();
+  DBProvider _database = DBProvider.db;
   Appl appl;
-  Dict dict;
   int page = 1;
   int pageSize = 30;
   int kind = 2;
@@ -17,20 +18,28 @@ class ApplReposytory {
 
   Future<void> fetchDict() async {
     try {
-      dynamic result = await _apiProvider.getDictionary();
-      dict = Dict.fromJson(result);
+      String hs = await _storage.read(key: 'hs');
+      Map<String, dynamic> data;
+      if (hs == null) {
+        data = await _apiProvider.getDictionary();
+        await _storage.write(key: 'hs', value: data['hs']);
+      } else
+        data = await _apiProvider.getCurrentDictionary(hs);
+
+      if (data['data'] != null)
+        data['data']['cities'].forEach((value) => _database.newCity(value));
     } catch (e) {
       print('fetchDict Error: $e');
     }
   }
 
-  Future<void> fetchCurrentDict() async {
-    dynamic result = await _apiProvider.getCurrentDictionary(dict.hs);
-    if (result.runtimeType != String && result['data'] == null)
-      print(result);
-    else
-      print(result);
-  }
+  // Future<void> fetchCurrentDict() async {
+  //   dynamic result = await _apiProvider.getCurrentDictionary(dict.hs);
+  //   if (result.runtimeType != String && result['data'] == null)
+  //     print(result);
+  //   else
+  //     print(result);
+  // }
 
   Future<dynamic> fetchApplItems() async {
     try {
@@ -43,7 +52,8 @@ class ApplReposytory {
           kind: kind,
           cityId: cityId,
           token: token);
-      appl = Appl.fromJson(result, dict.data.getCityes());
+      Map<int, String> cities = await _database.getCities();
+      appl = Appl.fromJson(result, cities);
       page++;
       return appl;
     } catch (e) {
