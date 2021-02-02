@@ -1,3 +1,5 @@
+import 'package:cto_task/features/application/model/dict_model.dart';
+
 class Appl {
   int _page;
   int _pageSize;
@@ -20,14 +22,18 @@ class Appl {
   List<Results> get results => _results;
   set results(List<Results> results) => _results = results;
 
-  Appl.fromJson(Map<String, dynamic> json, Map<int, String> city) {
+  Appl.fromJson(Map<String, dynamic> json, Dict dict) {
     _page = json['page'];
     _pageSize = json['page_size'];
     _totalCount = json['total_count'];
     if (json['results'] != null) {
       _results = new List<Results>();
       json['results'].forEach((v) {
-        v['c_name'] = city[v['city_id']];
+        Carmodels carModel = dict.carmodels[v['carmodel_id']];
+        Carmakes carMake = dict.carmakes[carModel.carmakeId];
+
+        v['c_name'] = dict.cities[v['city_id']].name;
+        v['car_name'] = carMake.name + ' ' + carModel.name;
         _results.add(new Results.fromJson(v));
       });
     }
@@ -81,6 +87,7 @@ class Results {
   String _closeNotifyAt;
   bool _isDealer;
   String _c_name;
+  String _car_name;
 
   Results(
       {int id,
@@ -117,7 +124,8 @@ class Results {
       int closedAmount,
       String closeNotifyAt,
       bool isDealer,
-      String c_name}) {
+      String c_name,
+      String car_name}) {
     this._id = id;
     this._createdAt = createdAt;
     this._publishedAt = publishedAt;
@@ -153,6 +161,7 @@ class Results {
     this._closeNotifyAt = closeNotifyAt;
     this._isDealer = isDealer;
     this._c_name = c_name;
+    this._car_name = car_name;
   }
 
   int get id => _id;
@@ -226,6 +235,8 @@ class Results {
   set isDealer(bool isDealer) => _isDealer = isDealer;
   String get c_name => _c_name;
   set c_name(String c_name) => _c_name = c_name;
+  String get car_name => _car_name;
+  set car_name(String car_name) => _car_name = car_name;
 
   Results.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -263,6 +274,7 @@ class Results {
     _closeNotifyAt = json['close_notify_at'];
     _isDealer = json['is_dealer'];
     _c_name = json['c_name'];
+    _car_name = json['car_name'];
   }
 
   Map<String, dynamic> toJson() {

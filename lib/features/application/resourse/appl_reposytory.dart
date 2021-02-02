@@ -10,24 +10,32 @@ class ApplReposytory {
   FlutterSecureStorage _storage = FlutterSecureStorage();
   DBProvider _database = DBProvider.db;
   Appl appl;
+  Dict dict;
   int page = 1;
   int pageSize = 30;
   int kind = 2;
   int cityId = 34;
-  Map<int, String> test = new Map<int, String>();
+  Map<int, Carmakes> carmakes;
+  Map<int, Carmodels> carmodels;
 
   Future<void> fetchDict() async {
     try {
+      // await _storage.delete(key: 'hs');
       String hs = await _storage.read(key: 'hs');
       Map<String, dynamic> data;
-      if (hs == null) {
+
+      if (hs == null)
         data = await _apiProvider.getDictionary();
-        await _storage.write(key: 'hs', value: data['hs']);
-      } else
+      else
         data = await _apiProvider.getCurrentDictionary(hs);
 
-      if (data['data'] != null)
-        data['data']['cities'].forEach((value) => _database.newCity(value));
+      if (data['data'] != null) {
+        await _storage.write(key: 'dict', value: json.encode(data));
+        await _storage.write(key: 'hs', value: data['hs']);
+      } else
+        data = json.decode(await _storage.read(key: 'dict'));
+
+      dict = Dict.fromJson(data);
     } catch (e) {
       print('fetchDict Error: $e');
     }
@@ -52,8 +60,8 @@ class ApplReposytory {
           kind: kind,
           cityId: cityId,
           token: token);
-      Map<int, String> cities = await _database.getCities();
-      appl = Appl.fromJson(result, cities);
+
+      appl = Appl.fromJson(result, dict);
       page++;
       return appl;
     } catch (e) {

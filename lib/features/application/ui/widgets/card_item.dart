@@ -41,7 +41,7 @@ class CardItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      results.usrName,
+                      '${results.car_name} (${results.carYear}г)',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(fontSize: 14, color: Colors.grey),

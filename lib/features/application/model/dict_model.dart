@@ -1,6 +1,9 @@
 class Dict {
   String _hs;
   Data _data;
+  Map<int, Carmakes> _carmakes;
+  Map<int, Carmodels> _carmodels;
+  Map<int, Cities> _cities;
 
   Dict({String hs, Data data}) {
     this._hs = hs;
@@ -11,10 +14,27 @@ class Dict {
   set hs(String hs) => _hs = hs;
   Data get data => _data;
   set data(Data data) => _data = data;
+  Map<int, Carmakes> get carmakes => _carmakes;
+  set carmakes(Map<int, Carmakes> carmakes) => _carmakes = carmakes;
+  Map<int, Carmodels> get carmodels => _carmodels;
+  set carmodels(Map<int, Carmodels> carmodels) => _carmodels = carmodels;
+  Map<int, Cities> get cities => _cities;
+  set cities(Map<int, Cities> cities) => _cities = cities;
 
   Dict.fromJson(Map<String, dynamic> json) {
     _hs = json['hs'];
+
     _data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+
+    _carmakes = new Map<int, Carmakes>();
+    _carmodels = new Map<int, Carmodels>();
+    _cities = new Map<int, Cities>();
+    json['data']['carmakes']
+        .forEach((e) => _carmakes[e['id']] = Carmakes.fromJson(e));
+    json['data']['carmodels']
+        .forEach((e) => _carmodels[e['id']] = Carmodels.fromJson(e));
+    json['data']['cities']
+        .forEach((e) => _cities[e['id']] = Cities.fromJson(e));
   }
 
   Map<String, dynamic> toJson() {
@@ -35,11 +55,11 @@ class Data {
   List<BankRefillSystems> _bankRefillSystems;
   List<BankPurchaseTypes> _bankPurchaseTypes;
   List<Countries> _countries;
-  List<Cities> _cities;
+  // List<Cities> _cities;
   List<AdGroups> _adGroups;
   List<AdCategories> _adCategories;
-  List<Carmakes> _carmakes;
-  List<Carmodels> _carmodels;
+  // List<Carmakes> _carmakes;
+  // List<Carmodels> _carmodels;
   List<AdCloseReasons> _adCloseReasons;
   List<ProAdPrices> _proAdPrices;
   List<OrderRejectReasons> _orderRejectReasons;
@@ -53,11 +73,11 @@ class Data {
       List<BankRefillSystems> bankRefillSystems,
       List<BankPurchaseTypes> bankPurchaseTypes,
       List<Countries> countries,
-      List<Cities> cities,
+      // List<Cities> cities,
       List<AdGroups> adGroups,
       List<AdCategories> adCategories,
-      List<Carmakes> carmakes,
-      List<Carmodels> carmodels,
+      // List<Carmakes> carmakes,
+      // List<Carmodels> carmodels,
       List<AdCloseReasons> adCloseReasons,
       List<ProAdPrices> proAdPrices,
       List<OrderRejectReasons> orderRejectReasons,
@@ -69,11 +89,11 @@ class Data {
     this._bankRefillSystems = bankRefillSystems;
     this._bankPurchaseTypes = bankPurchaseTypes;
     this._countries = countries;
-    this._cities = cities;
+    // this._cities = cities;
     this._adGroups = adGroups;
     this._adCategories = adCategories;
-    this._carmakes = carmakes;
-    this._carmodels = carmodels;
+    // this._carmakes = carmakes;
+    // this._carmodels = carmodels;
     this._adCloseReasons = adCloseReasons;
     this._proAdPrices = proAdPrices;
     this._orderRejectReasons = orderRejectReasons;
@@ -96,17 +116,17 @@ class Data {
       _bankPurchaseTypes = bankPurchaseTypes;
   List<Countries> get countries => _countries;
   set countries(List<Countries> countries) => _countries = countries;
-  List<Cities> get cities => _cities;
-  set cities(List<Cities> cities) => _cities = cities;
+  // List<Cities> get cities => _cities;
+  // set cities(List<Cities> cities) => _cities = cities;
   List<AdGroups> get adGroups => _adGroups;
   set adGroups(List<AdGroups> adGroups) => _adGroups = adGroups;
   List<AdCategories> get adCategories => _adCategories;
   set adCategories(List<AdCategories> adCategories) =>
       _adCategories = adCategories;
-  List<Carmakes> get carmakes => _carmakes;
-  set carmakes(List<Carmakes> carmakes) => _carmakes = carmakes;
-  List<Carmodels> get carmodels => _carmodels;
-  set carmodels(List<Carmodels> carmodels) => _carmodels = carmodels;
+  // List<Carmakes> get carmakes => _carmakes;
+  // set carmakes(List<Carmakes> carmakes) => _carmakes = carmakes;
+  // List<Carmodels> get carmodels => _carmodels;
+  // set carmodels(List<Carmodels> carmodels) => _carmodels = carmodels;
   List<AdCloseReasons> get adCloseReasons => _adCloseReasons;
   set adCloseReasons(List<AdCloseReasons> adCloseReasons) =>
       _adCloseReasons = adCloseReasons;
@@ -161,12 +181,12 @@ class Data {
         _countries.add(new Countries.fromJson(v));
       });
     }
-    if (json['cities'] != null) {
-      _cities = new List<Cities>();
-      json['cities'].forEach((v) {
-        _cities.add(new Cities.fromJson(v));
-      });
-    }
+    // if (json['cities'] != null) {
+    //   _cities = new List<Cities>();
+    //   json['cities'].forEach((v) {
+    //     _cities.add(new Cities.fromJson(v));
+    //   });
+    // }
     if (json['ad_groups'] != null) {
       _adGroups = new List<AdGroups>();
       json['ad_groups'].forEach((v) {
@@ -179,18 +199,18 @@ class Data {
         _adCategories.add(new AdCategories.fromJson(v));
       });
     }
-    if (json['carmakes'] != null) {
-      _carmakes = new List<Carmakes>();
-      json['carmakes'].forEach((v) {
-        _carmakes.add(new Carmakes.fromJson(v));
-      });
-    }
-    if (json['carmodels'] != null) {
-      _carmodels = new List<Carmodels>();
-      json['carmodels'].forEach((v) {
-        _carmodels.add(new Carmodels.fromJson(v));
-      });
-    }
+    // if (json['carmakes'] != null) {
+    //   _carmakes = new List<Carmakes>();
+    //   json['carmakes'].forEach((v) {
+    //     _carmakes.add(new Carmakes.fromJson(v));
+    //   });
+    // }
+    // if (json['carmodels'] != null) {
+    //   _carmodels = new List<Carmodels>();
+    //   json['carmodels'].forEach((v) {
+    //     _carmodels.add(new Carmodels.fromJson(v));
+    //   });
+    // }
     if (json['ad_close_reasons'] != null) {
       _adCloseReasons = new List<AdCloseReasons>();
       json['ad_close_reasons'].forEach((v) {
@@ -211,15 +231,6 @@ class Data {
     }
     _config =
         json['config'] != null ? new Config.fromJson(json['config']) : null;
-  }
-
-  Map<int, String> getCityes(){
-    Map<int, String> c = new Map<int, String>();
-    List<Cities> cl = this._cities;
-    for(int i = 0, l = cl.length; i < l; i++){
-      c[cl[i].id] = cl[i].name;
-    }
-    return c;
   }
 
   Map<String, dynamic> toJson() {
@@ -247,9 +258,9 @@ class Data {
     if (this._countries != null) {
       data['countries'] = this._countries.map((v) => v.toJson()).toList();
     }
-    if (this._cities != null) {
-      data['cities'] = this._cities.map((v) => v.toJson()).toList();
-    }
+    // if (this._cities != null) {
+    //   data['cities'] = this._cities.map((v) => v.toJson()).toList();
+    // }
     if (this._adGroups != null) {
       data['ad_groups'] = this._adGroups.map((v) => v.toJson()).toList();
     }
@@ -257,12 +268,12 @@ class Data {
       data['ad_categories'] =
           this._adCategories.map((v) => v.toJson()).toList();
     }
-    if (this._carmakes != null) {
-      data['carmakes'] = this._carmakes.map((v) => v.toJson()).toList();
-    }
-    if (this._carmodels != null) {
-      data['carmodels'] = this._carmodels.map((v) => v.toJson()).toList();
-    }
+    // if (this._carmakes != null) {
+    //   data['carmakes'] = this._carmakes.map((v) => v.toJson()).toList();
+    // }
+    // if (this._carmodels != null) {
+    //   data['carmodels'] = this._carmodels.map((v) => v.toJson()).toList();
+    // }
     if (this._adCloseReasons != null) {
       data['ad_close_reasons'] =
           this._adCloseReasons.map((v) => v.toJson()).toList();
